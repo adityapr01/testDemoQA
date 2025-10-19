@@ -1,0 +1,16 @@
+{
+  "keywordFileContentHash": "B42B048EFEC090F9ACD1D04E8DB76C4A",
+  "keywordClasses": [
+    {
+      "name": "co.id.inputPracticeForm.utilities",
+      "keywordMethods": [
+        {
+          "name": "closeAdsIfPresent",
+          "parameters": [],
+          "javadoc": ""
+        }
+      ]
+    }
+  ],
+  "javadocParsed": true
+}
