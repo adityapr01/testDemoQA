@@ -1,0 +1,27 @@
+{
+	"id": "62e9f926-dd92-40b0-bb9d-404155ca7f5f",
+	"name": "Petstore_Env",
+	"values": [
+		{
+			"key": "baseUrl",
+			"value": "https://petstore.swagger.io/v2",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "newPetId",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "newOrderId",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2025-10-19T16:33:54.152Z",
+	"_postman_exported_using": "Postman/10.24.27"
+}

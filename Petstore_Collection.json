@@ -1,0 +1,559 @@
+{
+	"info": {
+		"_postman_id": "dc64109f-61ee-4afa-984b-590044bb187d",
+		"name": "Petstore_Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6433005"
+	},
+	"item": [
+		{
+			"name": "TC-01 Menambahkan Hewan Baru",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Assertion Status Code\r",
+							"pm.test(\"TC-P01: Status code is 200 OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Assertion Response Body (Name check)\r",
+							"pm.test(\"TC-P01: Response Pet Name is correct\", function () {\r",
+							"    pm.expect(pm.response.json().name).to.eql(\"ChainDoge\");\r",
+							"});\r",
+							"\r",
+							"// Simpan ID dari response ke environment variable\r",
+							"var responseData = pm.response.json();\r",
+							"pm.environment.set(\"newPetId\", responseData.id);\r",
+							"console.log(\"Pet ID baru: \" + responseData.id); // Periksa nilai di Postman Console"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 1234567,\r\n  \"name\": \"PostmanChainDoge\",\r\n  \"status\": \"available\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/pet",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-02 Berhasil Mengambil Detail Hewan Bedasarkan ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(200);\r",
+							"pm.expect(pm.response.json().id).to.eql(pm.environment.get(\"newPetId\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pet/{{newPetId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet",
+						"{{newPetId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-03 Berhasil Update Data Hewan",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(200)\r",
+							"pm.expect(pm.response.json().name).to.eql(\"ChainCatUpdated\");\r",
+							"pm.expect(pm.response.json().status).to.eql(\"pending\");\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"id\": {{newPetId}}, \"name\": \"ChainCatUpdated\", \"status\": \"pending\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/pet",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-04 Berhasil Mencari Hewan dengan Status 'available'",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(200);\r",
+							"pm.expect(pm.response.json()).to.be.an('array');\r",
+							"pm.expect(pm.response.json()[0].status).to.eql(\"available\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pet/findByStatus?status=available",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet",
+						"findByStatus"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "available"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-05 Berhasil Menghapus Data Hewan (Chaining)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(200);    \r",
+							"pm.expect(pm.response.json().message).to.eql(String(pm.environment.get(\"newPetId\")));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pet/{{newPetId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet",
+						"{{newPetId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-06 Verifikasi Penghapusan Hewan (Negative Check After Delete)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(404);\r",
+							"pm.expect(pm.response.json().message).to.eql(\"Pet not found\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pet/{{newPetId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet",
+						"{{newPetId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-07 Berhasil Menempatkan Pesanan Baru",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(200);\r",
+							"pm.expect(pm.response.json().status).to.eql(\"placed\");\r",
+							"pm.environment.set(\"newOrderId\", pm.response.json().id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"id\": 1234567, \"petId\": 100, \"quantity\": 1, \"shipDate\": \"2025-10-25T00:00:00.000Z\", \"status\": \"placed\", \"complete\": true}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/store/order",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"store",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-08 Berhasil Mengambil Detail Pesanan",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(200);\r",
+							"pm.expect(pm.response.json().petId).to.eql(100);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/store/order/{{newOrderId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"store",
+						"order",
+						"{{newOrderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-09 Gagal Mengambil Hewan dengan ID Tidak Ada",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(404);\r",
+							"pm.expect(pm.response.json().message).to.eql(\"Pet not found\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pet/999999999999",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet",
+						"999999999999"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-10 Gagal Menambahkan Hewan (Missing Required Field)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(400);\r",
+							"pm.expect(pm.response.json().message).to.eql(\"Invalid input\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"id\": 10, \"status\": \"available\",}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/pet",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-11 Gagal Mengupdate Hewan dengan ID yang Tidak Ada",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(404);\r",
+							"pm.expect(pm.response.json().message).to.eql(\"not found\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"id\": 888888888, \"name\": \"Fake\", \"status\": \"available\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/pet",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-12 Gagal Mencari Hewan dengan Nilai Status Tidak Valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(400);\r",
+							"pm.expect(pm.response.json().message).to.include(\"Invalid status value\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pet/findByStatus?status=unknown",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet",
+						"findByStatus"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "unknown"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-13 Gagal Menghapus Hewan dengan ID Tidak Ada",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(404);\r",
+							"pm.expect(pm.response.json().message).to.eql(\"Pet not found\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pet/111111111111",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet",
+						"111111111111"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-14 Gagal Menempatkan Pesanan dengan Kuantitas Negatif",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(400);\r",
+							"pm.expect(pm.response.json().message).to.include(\"Invalid\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "json{ \"id\": 0, \"petId\": 100, \"quantity\": -1, \"status\": \"placed\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/store/order",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"store",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC-15 Gagal Mengambil Pesanan dengan ID Tidak Ada",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.response.to.have.status(404);\r",
+							"pm.expect(pm.response.json().message).to.eql(\"Order not found\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/store/order/111111111111",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"store",
+						"order",
+						"111111111111"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
