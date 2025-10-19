@@ -11,3 +11,9 @@ Untuk Running  https://demoqa.com/automation-practice-form Langkah Running :
 6. Kemudian klik test suite
 7. Selanjutnya buka test suite, **Input Practice Form**
 8. Running script di test suite, untuk mendapatkan result dan Hasil Test Suite nya.
+
+Running API Test https://petstore.swagger.io/#/
+1. Terdapat file Petstore_Collection.json dan Petstore_Env.json pada folder testdemoQA
+2. Import file collection dan environment ke aplikasi postman
+3. Running dari step test case yang tersedia pada file Petstore_Collection
+4. Terdapat test case excel untuk rincian test case yang diimplementkan.
